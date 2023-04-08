@@ -1,39 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
 import { useEffect, useState } from 'react';
 import { stack } from './sdk/contentstack_module';
+import HomePage from './pages/HomePage';
 
 const getEntry = () => {
-  return stack.ContentType('page').Entry('blta11f7b548b8605de').fetch();
+  return stack
+    .ContentType('home_body')
+    .Entry('blt44327395a6ba43c8')
+    .toJSON()
+    .fetch();
 };
 
 function App() {
-  // const [entry, setEntry] = useState();
+  const [entry, setEntry] = useState();
 
   useEffect(() => {
-    getEntry().then(res => {
-      console.log(res, 'test');
-    });
-    // setEntry(entry);
+    getEntry()
+      .then(res => {
+        setEntry(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }, []);
 
-  return (
-    <div className='App'>
-      <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'>
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  return <div className='App'>{entry && <HomePage entry={entry} />}</div>;
 }
 
 export default App;
